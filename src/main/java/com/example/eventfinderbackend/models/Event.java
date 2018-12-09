@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Event {
 	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private String id;
 	private String name;
 	private String description;
 	private String category;
@@ -28,23 +27,28 @@ public class Event {
 	@JsonIgnore
 	private User owner;
 	
+	@Override
+	public String toString() {
+		return "Event [name=" + name + ", registeredUsers=" + registeredUsers + "]";
+	}
+	
 	@ManyToMany(mappedBy="registeredEvents")
 	List<User> registeredUsers;
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
+	}
+	public User getOwner() {
+		return owner;
 	}
 	public List<User> getRegisteredUsers() {
 		return registeredUsers;
 	}
 	public void setRegisteredUsers(List<User> registeredUsers) {
 		this.registeredUsers = registeredUsers;
-	}
-	public User getOwner() {
-		return owner;
 	}
 	public void setOwner(User owner) {
 		this.owner = owner;

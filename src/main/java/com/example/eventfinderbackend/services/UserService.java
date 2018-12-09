@@ -97,7 +97,7 @@ public class UserService {
     }
     
     @GetMapping("/api/event/{eventId}/user")
-    public List<User> findUsersForEvent(@PathVariable int eventId) {
+    public List<User> findUsersForEvent(@PathVariable String eventId) {
     	Optional<Event> op = eventRepository.findById(eventId);
     	if(op != null) {
     		Event event = op.get();
