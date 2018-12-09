@@ -1,10 +1,13 @@
 package com.example.eventfinderbackend.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
+import com.example.eventfinderbackend.models.Event;
 import com.example.eventfinderbackend.models.User;
+import com.example.eventfinderbackend.repositories.EventRepository;
 import com.example.eventfinderbackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,6 +27,9 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+	
+	@Autowired
+    EventRepository eventRepository;
 
     @GetMapping("/api/user")
     public ResponseEntity findAllUsers() {
@@ -88,6 +94,16 @@ public class UserService {
         catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+    
+    @GetMapping("/api/event/{eventId}/user")
+    public List<User> findUsersForEvent(@PathVariable int eventId) {
+    	Optional<Event> op = eventRepository.findById(eventId);
+    	if(op != null) {
+    		Event event = op.get();
+    		return event.getRegisteredUsers();
+    	}
+    	return null;
     }
 
 
