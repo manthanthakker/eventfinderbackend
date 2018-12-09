@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000" , allowCredentials = "true" , allowedHeaders = "*")
+@CrossOrigin(origins = "*" , allowCredentials = "true" , allowedHeaders = "*")
 public class UserService {
 
     @Autowired
@@ -79,7 +79,7 @@ public class UserService {
         try {
             User user = userRepository.findUserByCredentials(credentials.getUsername(), credentials.getPassword());
             if (user==null) {
-                throw new Exception("incorrect credentials");
+                throw new Exception("Incorrect credentials! Please try again!");
             }
             return ResponseEntity
                     .status(HttpStatus.OK)
