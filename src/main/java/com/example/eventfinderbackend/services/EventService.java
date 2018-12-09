@@ -1,5 +1,6 @@
 package com.example.eventfinderbackend.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class EventService {
     EventRepository eventRepository;
 	
 	@PostMapping("/api/user/{userId}/event")
-    public void createUser(@RequestBody Event event, @PathVariable int userId) {
+    public void createEvent(@RequestBody Event event, @PathVariable int userId) {
 		Optional<User> op = userRepository.findById(userId);
 		if(op != null) {
 			User user = op.get();
@@ -38,14 +39,13 @@ public class EventService {
 		}
     }
 	
-	@PostMapping("/api/user/{userId}/event/{eventId}")
+	@PostMapping("/api/user/{userId}/register")
     public void registerUser(@PathVariable int userId,
-    					   @PathVariable int eventId) {
+    						 @RequestBody Event event) {
 		Optional<User> uOp = userRepository.findById(userId);
-		Optional<Event> eOp = eventRepository.findById(eventId);
-		if(uOp != null && eOp != null) {
+		if(uOp != null) {
+			event.setRegisteredUsers(new ArrayList<User>());
 			User user = uOp.get();
-			Event event = eOp.get();
 			user.getRegisteredEvents().add(event);
 			if(!event.getRegisteredUsers().contains(user)) {
 				event.getRegisteredUsers().add(user);
@@ -81,7 +81,7 @@ public class EventService {
 	}
 	
 	@DeleteMapping("/api/event/{eventId}")
-	public void deleteEvent(@PathVariable int eventId) {
+	public void deleteEvent(@PathVariable String eventId) {
 		eventRepository.deleteById(eventId);
 	}
 }
