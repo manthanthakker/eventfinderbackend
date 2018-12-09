@@ -1,8 +1,16 @@
 package com.example.eventfinderbackend.models;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -20,6 +28,15 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+    
+    @OneToMany(mappedBy="owner")
+    private List<Event> hostedEvents;
+    
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name="USER_EVENT", joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="ID"), 
+    							  inverseJoinColumns=@JoinColumn(name="EVENT_ID", referencedColumnName="ID"))
+    private List<Event> registeredEvents;
 
 
     public User() {}
@@ -35,15 +52,25 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
     }
-
     public int getId() {
         return id;
     }
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getUsername() {
+    public List<Event> getRegisteredEvents() {
+		return registeredEvents;
+	}
+	public void setRegisteredEvents(List<Event> registeredEvents) {
+		this.registeredEvents = registeredEvents;
+	}
+	public List<Event> getHostedEvents() {
+		return hostedEvents;
+	}
+	public void setHostedEvents(List<Event> hostedEvents) {
+		this.hostedEvents = hostedEvents;
+	}
+	public String getUsername() {
         return username;
     }
     public void setUsername(String username) {
@@ -67,8 +94,8 @@ public class User {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-
-
-
+    
+    public void hostEvent(Event event) {
+    	this.hostedEvents.add(event);
+    }
 }
