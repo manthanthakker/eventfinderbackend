@@ -15,10 +15,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
+
     @Override
     public String toString() {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + "]";
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userType='" + userType + '\'' +
+                ", aboutMe='" + aboutMe + '\'' +
+                ", hostedEvents=" + hostedEvents +
+                ", registeredEvents=" + registeredEvents +
+                '}';
     }
 
     @Id
@@ -28,7 +38,26 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    
+    private String userType;
+    private String aboutMe;
+
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
     @OneToMany(mappedBy="owner")
     private List<Event> hostedEvents;
     
@@ -47,10 +76,12 @@ public class User {
         this.username = username;
         this.password = password;
     }
-    public User(String firstName, String lastName, String username, String password) {
+    public User(String aboutMe, String userType, String firstName, String lastName, String username, String password) {
         this(username, password);
         this.firstName = firstName;
         this.lastName = lastName;
+        this.userType = userType;
+        this.aboutMe = aboutMe;
     }
     public int getId() {
         return id;
