@@ -3,8 +3,6 @@ package com.example.eventfinderbackend.models;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -13,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Event {
+	private static long idGenerator = 1;
 	@Id
     private String id;
 	private String name;
@@ -26,6 +25,10 @@ public class Event {
 	@ManyToOne()
 	@JsonIgnore
 	private User owner;
+	
+	public Event() {
+		this.id = "" + idGenerator++;
+	}
 	
 	@Override
 	public String toString() {
