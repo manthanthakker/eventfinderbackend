@@ -1,5 +1,6 @@
 package com.example.eventfinderbackend.services;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +23,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@CrossOrigin(origins = "*" , allowCredentials = "true" , allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = "*")
 public class UserService {
 
     @Autowired
     UserRepository userRepository;
-	
-	@Autowired
+
+    @Autowired
     EventRepository eventRepository;
 
     @GetMapping("/api/user")
@@ -38,8 +39,7 @@ public class UserService {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(userList);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
@@ -53,7 +53,7 @@ public class UserService {
     @PostMapping("/api/user")
     public List<User> createUser(@RequestBody User user) {
         userRepository.save(user);
-        return (List<User>)userRepository.findAll();
+        return (List<User>) userRepository.findAll();
     }
 
 
@@ -69,7 +69,7 @@ public class UserService {
 
     @GetMapping("/api/user/profile")
     public User profile(HttpSession session) {
-        User currentUser = (User)session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("currentUser");
         return currentUser;
     }
 
@@ -84,37 +84,36 @@ public class UserService {
             HttpSession session) {
         try {
             User user = userRepository.findUserByCredentials(credentials.getUsername(), credentials.getPassword());
-            if (user==null) {
+            if (user == null) {
                 throw new Exception("Incorrect credentials! Please try again!");
             }
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(user);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-    
+
     @GetMapping("/api/event/{eventId}/user")
     public List<User> findUsersForEvent(@PathVariable String eventId) {
-    	Optional<Event> op = eventRepository.findById(eventId);
-    	if(op != null) {
-    		Event event = op.get();
-    		return event.getRegisteredUsers();
-    	}
-    	return null;
-    }
+        Optional<Event> op = eventRepository.findById(eventId);
 
+        if (op.isPresent()) {
+            Event event = op.get();
+            return event.getRegisteredUsers();
+        }
+        return new LinkedList<User>();
+    }
 
 
     @PutMapping("/api/user/{id}")
     public List<User> updateUser
-            (@PathVariable("id") int userId,@RequestBody User user) {
+            (@PathVariable("id") int userId, @RequestBody User user) {
         User u = userRepository.findById(userId).get();
         u.setUsername(user.getUsername());
         userRepository.save(u);
-        return (List<User>)userRepository.findAll();
+        return (List<User>) userRepository.findAll();
     }
 
 
