@@ -60,6 +60,18 @@ public class EventService {
 		return eventList;
 	}
 	
+	@GetMapping("/api/event/custom")
+	public List<Event> findAllCustomEvents() {
+		List<Event> eventList = (List<Event>) eventRepository.findAll();
+		List<Event> customEvents = new ArrayList<Event>();
+		for(Event e : eventList) {
+			if(e.getOwner() != null) {
+				customEvents.add(e);
+			}
+		}
+		return customEvents;
+	}
+	
 	 @GetMapping("/api/user/{userId}/event/registered")
 	    public List<Event> findEventsForUser(@PathVariable int userId) {
 	    	Optional<User> op = userRepository.findById(userId);
