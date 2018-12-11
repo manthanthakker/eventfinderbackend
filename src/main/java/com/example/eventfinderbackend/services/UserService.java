@@ -79,20 +79,14 @@ public class UserService {
     }
 
     @PostMapping("/api/user/login")
-    public ResponseEntity login(
+    public User login(
             @RequestBody User credentials,
             HttpSession session) {
-        try {
+
+
             User user = userRepository.findUserByCredentials(credentials.getUsername(), credentials.getPassword());
-            if (user == null) {
-                throw new Exception("Incorrect credentials! Please try again!");
-            }
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+            session.setAttribute("currentUser",user);
+            return user;
     }
 
     @GetMapping("/api/event/{eventId}/user")
