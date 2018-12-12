@@ -43,7 +43,7 @@ public class EventService {
 	@PutMapping("/api/user/{userId}/event/{eventId}")
 	public void updateEvent(
 			@PathVariable(name="userId") int userId,
-			@PathVariable(name="courseId") String eventId,
+			@PathVariable(name="eventId") String eventId,
 			@RequestBody Event event) {
 		Optional<User> op = userRepository.findById(userId);
 		if(op != null) {
