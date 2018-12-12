@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +39,19 @@ public class EventService {
 			eventRepository.save(event);
 		}
     }
+	
+	@PutMapping("/api/user/{userId}/event/{eventId}")
+	public void updateEvent(
+			@PathVariable(name="userId") int userId,
+			@PathVariable(name="courseId") String eventId,
+			@RequestBody Event event) {
+		Optional<User> op = userRepository.findById(userId);
+		if(op != null) {
+			User user = op.get();
+			event.setOwner(user);
+			eventRepository.save(event);
+		}
+	}
 	
 	@PostMapping("/api/user/{userId}/register")
     public void registerUser(@PathVariable int userId,
@@ -95,5 +109,14 @@ public class EventService {
 	@DeleteMapping("/api/event/{eventId}")
 	public void deleteEvent(@PathVariable String eventId) {
 		eventRepository.deleteById(eventId);
+	}
+	
+	@GetMapping("/api/event/{eventId}")
+	public Event findEventById(@PathVariable String eventId) {
+		Optional<Event> op = eventRepository.findById(eventId);
+		if(op != null) {
+			return op.get();
+		}
+		return null;
 	}
 }
