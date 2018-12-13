@@ -105,7 +105,9 @@ public class UserService {
     public List<User> updateUser
             (@PathVariable("id") int userId, @RequestBody User user) {
         User u = userRepository.findById(userId).get();
-        u.setUsername(user.getUsername());
+        u.setFirstName(user.getFirstName());
+        u.setLastName(user.getLastName());
+        u.setAboutMe(user.getAboutMe());
         userRepository.save(u);
         return (List<User>) userRepository.findAll();
     }
